@@ -1,53 +1,31 @@
-# Pxxl Deployment Guide
+# InfinityFree Deployment Guide
 
-This app is a plain PHP/MySQL project. It does not need Composer, Node, Laravel, or a build step.
+This project is a plain PHP/MySQL app. InfinityFree is a good fit because it supports PHP, MySQL, phpMyAdmin, and `.htaccess`.
 
-## Before Deploying
+## What To Upload
 
-The current local database has been backed up to:
-
-```text
-database/backups/goodness_platform_live_2026-06-10.sql
-```
-
-Keep that file private because it contains real database records. It is ignored by Git.
-
-## Pxxl Settings
-
-Use these settings when creating the PHP app on Pxxl:
+Upload the contents of this project folder into InfinityFree's `htdocs` folder:
 
 ```text
-Runtime: PHP
-Public directory / web root: public
-Entry file: index.php
-Build command: none
-Start command: none
+goodness-student-lecturer-platform/
 ```
 
-## Environment Variables
-
-Set either `DATABASE_URL`:
+Do not upload:
 
 ```text
-DATABASE_URL=mysql://username:password@host:3306/database_name?charset=utf8mb4
+.git/
+database/backups/
+.env
 ```
 
-Or set the separate database variables:
+The root `.htaccess` file redirects visitors into `public/`, so the site can still work even though InfinityFree does not let you change the web root.
 
-```text
-DB_HOST=your_mysql_host
-DB_PORT=3306
-DB_DATABASE=your_database_name
-DB_USERNAME=your_database_user
-DB_PASSWORD=your_database_password
-DB_CHARSET=utf8mb4
-```
+## Database Setup
 
-The app still works locally with XAMPP defaults if these variables are not set.
-
-## Database Import
-
-To preserve the current data, import the live backup into the Pxxl MySQL database:
+1. Open InfinityFree / VistaPanel.
+2. Create a MySQL database.
+3. Open phpMyAdmin from that database.
+4. Import the current backup if you want to preserve local data:
 
 ```text
 database/backups/goodness_platform_live_2026-06-10.sql
@@ -60,7 +38,38 @@ database/schema.sql
 database/seed.sql
 ```
 
-Do not import `schema.sql` over the live database unless you intentionally want to reset it.
+Do not import `schema.sql` over a database that already has the current project data unless you intentionally want to reset it.
+
+## Database Config On InfinityFree
+
+Copy this file:
+
+```text
+config/database.local.example.php
+```
+
+Rename the copy to:
+
+```text
+config/database.local.php
+```
+
+Then edit it with the database details from VistaPanel:
+
+```php
+<?php
+
+return [
+    'host' => 'sql000.infinityfree.com',
+    'port' => 3306,
+    'database' => 'if0_00000000_goodness_platform',
+    'username' => 'if0_00000000',
+    'password' => 'your_vistapanel_password',
+    'charset' => 'utf8mb4',
+];
+```
+
+`config/database.local.php` is ignored by Git so real database credentials do not get committed.
 
 ## Uploads
 
@@ -70,13 +79,17 @@ Course materials upload to:
 public/uploads/materials
 ```
 
-Make sure this folder is writable on Pxxl. PHP execution is blocked in that folder by `.htaccess`.
+Keep the `.htaccess` file inside that folder. It blocks PHP files from running inside uploads.
 
-## Smoke Test After Deploy
+## Smoke Test
 
-1. Open the deployed URL.
-2. Click `Get Started`.
+1. Visit the InfinityFree URL.
+2. Confirm the landing page loads.
 3. Sign in as admin.
 4. Open Users, Courses, FAQ, and Materials.
 5. Sign in as student and test the chatbot.
-6. Upload a small material file as lecturer/admin and confirm it appears in the material list.
+6. Upload a small material file as lecturer/admin and ask the chatbot about it.
+
+## Notes
+
+InfinityFree does not support remote MySQL access. That is fine for this project because the PHP app and MySQL database will both run inside InfinityFree. Use phpMyAdmin for database imports and exports.

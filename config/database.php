@@ -1,5 +1,10 @@
 <?php
 
+$localConfig = __DIR__ . '/database.local.php';
+if (is_file($localConfig)) {
+    return require $localConfig;
+}
+
 $databaseUrl = getenv('DATABASE_URL') ?: '';
 $parsedUrl = $databaseUrl ? parse_url($databaseUrl) : false;
 

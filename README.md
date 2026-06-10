@@ -66,9 +66,9 @@ http://localhost/goodness-student-lecturer-platform/public/
 
 ## Deployment
 
-See `DEPLOYMENT.md` for Pxxl deployment steps.
+See `DEPLOYMENT.md` for InfinityFree deployment steps.
 
-For production, set database credentials through environment variables such as:
+For hosts that support environment variables, set database credentials through variables such as:
 
 ```text
 DB_HOST
@@ -79,6 +79,8 @@ DB_PASSWORD
 ```
 
 The app also supports a single `DATABASE_URL` value.
+
+For InfinityFree, copy `config/database.local.example.php` to `config/database.local.php` on the server and enter the MySQL details from VistaPanel.
 
 Do not import `database/schema.sql` into a database that already contains records unless you want to reset it. Use a current SQL backup when preserving live data.
 

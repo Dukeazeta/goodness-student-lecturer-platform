@@ -1,4 +1,5 @@
 database/backups/
+config/database.local.php
 public/uploads/materials/*
 !public/uploads/materials/.gitkeep
 !public/uploads/materials/.htaccess
