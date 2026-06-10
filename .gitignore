@@ -1,0 +1,8 @@
+database/backups/
+public/uploads/materials/*
+!public/uploads/materials/.gitkeep
+!public/uploads/materials/.htaccess
+.env
+*.log
+Thumbs.db
+.DS_Store
