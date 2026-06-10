@@ -24,7 +24,7 @@ if ($parsedUrl && isset($parsedUrl['scheme']) && in_array($parsedUrl['scheme'], 
     ];
 }
 
-function env_or_default(array $keys, mixed $default): mixed
+function env_or_default(array $keys, $default)
 {
     foreach ($keys as $key) {
         $value = getenv($key);

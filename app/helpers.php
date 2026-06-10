@@ -14,16 +14,38 @@ function public_path(string $path = ''): string
 
 function url(string $route = '', array $params = []): string
 {
-    $query = array_merge(['route' => $route], $params);
-    if ($route === '') {
-        unset($query['route']);
+    $path = trim($route, '/');
+    $base = app_url_base();
+    $url = rtrim($base, '/') . ($path !== '' ? '/' . $path : '/');
+
+    if ($params) {
+        $url .= '?' . http_build_query($params);
     }
-    return 'index.php' . ($query ? '?' . http_build_query($query) : '');
+
+    return $url;
+}
+
+function app_url_base(): string
+{
+    $scriptBase = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+    $scriptBase = $scriptBase === '/' ? '' : rtrim($scriptBase, '/');
+    $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+
+    if ($scriptBase !== '' && starts_with($requestPath, $scriptBase . '/')) {
+        return $scriptBase;
+    }
+
+    return '';
+}
+
+function starts_with(string $value, string $prefix): bool
+{
+    return substr($value, 0, strlen($prefix)) === $prefix;
 }
 
 function asset(string $path): string
 {
-    return 'assets/' . ltrim($path, '/');
+    return rtrim(app_url_base(), '/') . '/assets/' . ltrim($path, '/');
 }
 
 function redirect(string $route, array $params = []): void
